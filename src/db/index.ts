@@ -1,12 +1,12 @@
+import { Artist } from '../artist/entities/artist.entity';
 import { Track } from '../track/entities/track.entity';
 import { User } from '../user/entities/user.entity';
 
 type DB = {
   Users: User[];
   Tracks: Track[];
-  Artists: any[];
   Albums: any[];
-  // Artists: Artist[];
+  Artists: Artist[];
   // Albums: Album[];
 };
 
