@@ -1,13 +1,10 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { db } from '../db';
 import { randomUUID } from 'crypto';
 import { omitPassword } from '../utils/omit-password';
+import { ThrowNotFound } from 'src/utils/throw-not-found';
 
 @Injectable()
 export class UserService {
@@ -19,7 +16,7 @@ export class UserService {
     const user = db.Users.find((user) => user.id === id);
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} does not exist`);
+      ThrowNotFound('User', id);
     }
 
     return omitPassword(user);
@@ -47,7 +44,7 @@ export class UserService {
     const user = db.Users.find((user) => user.id === id);
 
     if (!user) {
-      throw new NotFoundException(`User with id ${id} does not exist`);
+      ThrowNotFound('User', id);
     }
 
     if (oldPassword !== user.password) {
@@ -65,7 +62,7 @@ export class UserService {
     const index = db.Users.findIndex((user) => user.id === id);
 
     if (index === -1) {
-      throw new NotFoundException(`User with id ${id} does not exist`);
+      ThrowNotFound('User', id);
     }
 
     db.Users.splice(index, 1);
