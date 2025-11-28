@@ -1,3 +1,4 @@
+import { Fav } from '../favs/entities/fav.entity';
 import { Album } from '../album/entities/album.entity';
 import { Artist } from '../artist/entities/artist.entity';
 import { Track } from '../track/entities/track.entity';
@@ -8,6 +9,7 @@ type DB = {
   Tracks: Track[];
   Artists: Artist[];
   Albums: Album[];
+  Favs: Fav;
 };
 
 export const db: DB = {
@@ -15,4 +17,9 @@ export const db: DB = {
   Tracks: [],
   Artists: [],
   Albums: [],
+  Favs: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };
