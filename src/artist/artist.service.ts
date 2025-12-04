@@ -3,18 +3,23 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { db } from '../db';
 import { ThrowNotFound } from '../utils/throw-not-found';
-import { randomUUID } from 'crypto';
-import { Artist } from './entities/artist.entity';
+// import { randomUUID } from 'crypto';
+// import { Artist } from './entities/artist.entity';
+import { DbService } from '../db/db.service';
 
 @Injectable()
 export class ArtistService {
-  create(createArtistDto: CreateArtistDto) {
-    const newArtist: Artist = {
-      id: randomUUID(),
-      ...createArtistDto,
-    };
+  constructor(private prisma: DbService) {}
 
-    db.Artists.push(newArtist);
+  create(createArtistDto: CreateArtistDto) {
+    // const newArtist: Artist = {
+    //   id: randomUUID(),
+    //   ...createArtistDto,
+    // };
+
+    const newArtist = this.prisma.artist.create({
+      data: createArtistDto,
+    });
 
     return newArtist;
   }

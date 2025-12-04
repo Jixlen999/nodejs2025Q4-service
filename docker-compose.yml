@@ -1,14 +1,16 @@
-version: '3.9'
-
 services:
   app:
     build: .
     container_name: home-library-rest-service
     restart: on-failure
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
     env_file:
       - .env
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - '4000:4000'
     networks:
