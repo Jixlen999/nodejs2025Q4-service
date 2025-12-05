@@ -12,4 +12,55 @@ model Artist {
   id      String  @id @default(uuid())
   name    String
   grammy  Boolean
+
+  albums Album[]
+  tracks Track[]
+  favId String? 
+
+
+  fav Fav? @relation(fields: [favId], references: [id])
+
+}
+
+model Album {
+  id String @id @default(uuid())
+  name String
+  year Int
+  artistId String?
+
+  tracks Track[]
+  favId String? 
+
+
+  artist Artist? @relation(fields: [artistId], references: [id])
+  fav Fav? @relation(fields: [favId], references: [id])
+}
+
+model Track {
+  id String @id @default(uuid())
+  name String
+  artistId String?
+  albumId String?
+  duration Int
+  favId String? 
+
+  album Album? @relation(fields: [albumId], references: [id])
+  artist Artist? @relation(fields: [artistId], references: [id])
+  fav Fav? @relation(fields: [favId], references: [id])
+}
+
+model User {
+  id String @id @default(uuid())
+  login String
+  password String
+  version Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Fav {
+  id String @id @default("favs")
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
 }

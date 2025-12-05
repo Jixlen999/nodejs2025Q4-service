@@ -1,35 +1,28 @@
 import { Injectable } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { db } from '../db';
 import { ThrowNotFound } from '../utils/throw-not-found';
-// import { randomUUID } from 'crypto';
-// import { Artist } from './entities/artist.entity';
 import { DbService } from '../db/db.service';
+import { PrismaErrorCodes } from '../constants/prisma-error-codes';
 
 @Injectable()
 export class ArtistService {
   constructor(private prisma: DbService) {}
 
-  create(createArtistDto: CreateArtistDto) {
-    // const newArtist: Artist = {
-    //   id: randomUUID(),
-    //   ...createArtistDto,
-    // };
-
-    const newArtist = this.prisma.artist.create({
+  async create(createArtistDto: CreateArtistDto) {
+    const newArtist = await this.prisma.artist.create({
       data: createArtistDto,
     });
 
     return newArtist;
   }
 
-  findAll() {
-    return db.Artists;
+  async findAll() {
+    return await this.prisma.artist.findMany();
   }
 
-  findOne(id: string) {
-    const artist = db.Artists.find((artist) => artist.id === id);
+  async findOne(id: string) {
+    const artist = await this.prisma.artist.findUnique({ where: { id } });
 
     if (!artist) {
       ThrowNotFound('Artist', id);
@@ -38,31 +31,40 @@ export class ArtistService {
     return artist;
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    const artist = db.Artists.find((artist) => artist.id === id);
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
+    try {
+      const updatedArtist = await this.prisma.artist.update({
+        where: { id },
+        data: { ...updateArtistDto },
+      });
 
-    if (!artist) {
-      ThrowNotFound('Artist', id);
+      return updatedArtist;
+    } catch (error) {
+      if (error.code === PrismaErrorCodes.EntityNotFound) {
+        ThrowNotFound('Artist', id);
+      }
     }
-
-    return Object.assign(artist, updateArtistDto);
   }
 
-  remove(id: string) {
-    const index = db.Artists.findIndex((artist) => artist.id === id);
+  async remove(id: string) {
+    try {
+      await this.prisma.album.updateMany({
+        where: { artistId: id },
+        data: { artistId: null },
+      });
 
-    if (index === -1) {
-      ThrowNotFound('Artist', id);
+      await this.prisma.track.updateMany({
+        where: { artistId: id },
+        data: { artistId: null },
+      });
+
+      await this.prisma.artist.delete({ where: { id } });
+
+      return true;
+    } catch (error) {
+      if (error.code === PrismaErrorCodes.EntityNotFound) {
+        ThrowNotFound('Artist', id);
+      }
     }
-
-    db.Artists.splice(index, 1);
-
-    db.Tracks.forEach((track) => {
-      if (track.artistId === id) track.artistId = null;
-    });
-
-    db.Albums.forEach((album) => {
-      if (album.artistId === id) album.artistId = null;
-    });
   }
 }
