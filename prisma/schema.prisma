@@ -15,11 +15,6 @@ model Artist {
 
   albums Album[]
   tracks Track[]
-  favId String? 
-
-
-  fav Fav? @relation(fields: [favId], references: [id])
-
 }
 
 model Album {
@@ -29,11 +24,9 @@ model Album {
   artistId String?
 
   tracks Track[]
-  favId String? 
 
 
   artist Artist? @relation(fields: [artistId], references: [id])
-  fav Fav? @relation(fields: [favId], references: [id])
 }
 
 model Track {
@@ -42,11 +35,9 @@ model Track {
   artistId String?
   albumId String?
   duration Int
-  favId String? 
 
   album Album? @relation(fields: [albumId], references: [id])
   artist Artist? @relation(fields: [artistId], references: [id])
-  fav Fav? @relation(fields: [favId], references: [id])
 }
 
 model User {
@@ -60,7 +51,7 @@ model User {
 
 model Fav {
   id String @id @default("favs")
-  artists Artist[]
-  albums  Album[]
-  tracks  Track[]
+  artists String[] 
+  albums  String[] 
+  tracks  String[] 
 }
