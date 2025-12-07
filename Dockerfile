@@ -2,7 +2,9 @@ FROM node:24.11-alpine
 WORKDIR /usr/src/app
 COPY package*.json .
 COPY prisma ./prisma/
-RUN npm ci && npm cache clean --force
+RUN npm ci && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /var/tmp/* /root/.npm /root/.cache
 COPY . .
 RUN npx prisma generate
 RUN npm run build

@@ -10,7 +10,7 @@ try {
 }
 
 console.log('🗑️ Удаляем временные файлы...');
-const dirsToRemove = ['generated', 'prisma/migrations', 'node_modules'];
+const dirsToRemove = ['generated', 'node_modules'];
 
 dirsToRemove.forEach((dir) => {
   if (existsSync(dir)) {
