@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { ThrowNotFound } from 'src/utils/throw-not-found';
+import { ThrowNotFound } from '../utils/throw-not-found';
 import { DbService } from '../db/db.service';
 import { PrismaErrorCodes } from '../constants/prisma-error-codes';
 

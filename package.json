@@ -28,7 +28,8 @@
     "docker:down": "docker-compose down",
     "docker:up": "docker-compose up --build -d",
     "docker:restart": "npm run docker:down && npm run docker:up",
-    "nuke": "node scripts/reset.js"
+    "nuke": "node scripts/reset.js",
+    "docker:size": "docker images nodejs2025q4-service-app"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
