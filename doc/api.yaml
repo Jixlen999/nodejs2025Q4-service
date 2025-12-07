@@ -1,5 +1,14 @@
 openapi: 3.0.0
 paths:
+  /crash:
+    get:
+      operationId: AppController_getRoot
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - App
   /user:
     post:
       operationId: UserController_create

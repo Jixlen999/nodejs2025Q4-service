@@ -2,7 +2,7 @@ services:
   app:
     build: .
     container_name: home-library-rest-service
-    restart: on-failure
+    restart: always
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

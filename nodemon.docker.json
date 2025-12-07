@@ -1,0 +1,12 @@
+{
+  "watch": ["src"],
+  "ext": "ts",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "ts-node -r tsconfig-paths/register src/main.ts",
+  "legacyWatch": true,
+  "pollingInterval": 1000,
+  "exitcrash": true,
+  "events": {
+    "crash": "exit 1"
+  }
+}
