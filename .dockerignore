@@ -1,0 +1,13 @@
+# .dockerignore
+.gitignore
+node_modules
+dist
+*.log
+.env
+docker-compose*.yml
+*.md
+*.spec.ts
+test
+dockerfile
+scripts
+doc
