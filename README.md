@@ -18,6 +18,12 @@ git clone {repository URL}
 npm install
 ```
 
+## Generating Prisma (important!)
+
+```
+npm prisma generate
+```
+
 ## Running application (with Docker + docker desktop)
 
 ```
