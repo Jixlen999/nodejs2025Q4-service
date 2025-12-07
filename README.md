@@ -12,6 +12,12 @@
 git clone {repository URL}
 ```
 
+## Changing branch
+
+```
+git checkout dev-part-2
+```
+
 ## Installing NPM modules
 
 ```
@@ -21,10 +27,10 @@ npm install
 ## Generating Prisma (important!)
 
 ```
-npm prisma generate
+npx prisma generate
 ```
 
-## Running application (with Docker + docker desktop)
+## Running application (with Docker + docker desktop running)
 
 ```
 npm run docker:up
