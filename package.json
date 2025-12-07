@@ -29,7 +29,11 @@
     "docker:up": "docker-compose up --build -d",
     "docker:restart": "npm run docker:down && npm run docker:up",
     "nuke": "node scripts/reset.js",
-    "docker:size": "docker images nodejs2025q4-service-app"
+    "docker:size": "docker images nodejs2025q4-service-app",
+    "security:docker": "docker scout quickview nodejs2025q4-service-app:latest",
+    "security:docker:cves": "docker scout cves nodejs2025q4-service-app:latest",
+    "security:docker:recommendations": "docker scout recommendations nodejs2025q4-service-app:latest",
+    "security:docker:check": "npm run security:docker && npm run security:docker:cves && npm run security:docker:recommendations"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.16",
