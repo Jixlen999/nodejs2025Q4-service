@@ -12,15 +12,17 @@ try {
 console.log('🗑️ Удаляем временные файлы...');
 const dirsToRemove = ['generated', 'prisma/migrations', 'node_modules'];
 
-dirsToRemove.forEach(dir => {
+dirsToRemove.forEach((dir) => {
   if (existsSync(dir)) {
     rmSync(dir, { recursive: true, force: true });
     console.log(`✓ Удалено: ${dir}`);
   }
 });
 
-console.log('📦 Восстанавливаем зависимости (используем существующий package-lock.json)...');
-execSync('npm ci', { stdio: 'inherit' }); 
+console.log(
+  '📦 Восстанавливаем зависимости (используем существующий package-lock.json)...',
+);
+execSync('npm ci', { stdio: 'inherit' });
 
 console.log('⚙️ Генерируем Prisma клиент...');
 execSync('npx prisma generate', { stdio: 'inherit' });
