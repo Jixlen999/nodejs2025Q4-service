@@ -10,6 +10,12 @@ export interface IRequest {
   body: any;
 }
 
+export interface IResponse {
+  statusCode: number;
+  statusMessage?: string;
+  body?: any;
+}
+
 @Injectable()
 export class LoggingService extends ConsoleLogger {
   private logDir: string;
@@ -93,5 +99,12 @@ export class LoggingService extends ConsoleLogger {
     });
 
     return cleanBody;
+  }
+
+  logResponse(response: IResponse) {
+    const logMessage = `[RESPONSE] ${JSON.stringify(response)}`;
+
+    this.log(logMessage);
+    this.writeToFile(this.logFilePath, logMessage);
   }
 }
