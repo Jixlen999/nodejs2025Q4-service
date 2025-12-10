@@ -6,6 +6,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+      - ./logs:/usr/src/app/logs
     env_file:
       - .env
     depends_on:

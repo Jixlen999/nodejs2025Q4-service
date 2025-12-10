@@ -1,9 +1,13 @@
-import { Module, Global } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { LoggingService } from './logging.service';
+import { LoggingMiddleware } from './logging.middleware';
 
-@Global()
 @Module({
   providers: [LoggingService],
   exports: [LoggingService],
 })
-export class LoggingModule {}
+export class LoggingModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
+}
