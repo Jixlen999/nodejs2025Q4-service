@@ -1,6 +1,7 @@
 import { Injectable, ConsoleLogger } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { LogLevel } from '../constants/log-levels';
 
 export interface IRequest {
   method: string;
@@ -20,16 +21,106 @@ export interface IResponse {
 export class LoggingService extends ConsoleLogger {
   private logDir: string;
   private logFilePath: string;
+  private currentLogLevel: LogLevel;
 
   constructor(context?: string) {
     super(context || 'Home Library');
 
+    this.currentLogLevel =
+      (process.env.LOG_LEVEL as LogLevel) || LogLevel.ERROR;
+
+    const levels = this.getLogLevels();
+    this.setLogLevels(levels);
+
     this.logDir = path.join(process.cwd(), 'logs');
     this.logFilePath = path.join(this.logDir, 'app.log');
 
-    this.ensureLogDirExists();
+    this.setupGlobalErrorHandlers();
 
-    this.setLogLevels(['error']);
+    this.ensureLogDirExists();
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    const priority = {
+      [LogLevel.ERROR]: 0,
+      [LogLevel.WARN]: 1,
+      [LogLevel.LOG]: 2,
+      [LogLevel.DEBUG]: 3,
+      [LogLevel.VERBOSE]: 4,
+    };
+
+    return priority[level] <= priority[this.currentLogLevel];
+  }
+
+  private getLogLevels(): LogLevel[] {
+    const levels: LogLevel[] = [LogLevel.ERROR];
+
+    if (this.shouldLog(LogLevel.WARN)) levels.push(LogLevel.WARN);
+    if (this.shouldLog(LogLevel.LOG)) levels.push(LogLevel.LOG);
+    if (this.shouldLog(LogLevel.DEBUG)) levels.push(LogLevel.DEBUG);
+    if (this.shouldLog(LogLevel.VERBOSE)) levels.push(LogLevel.VERBOSE);
+
+    return levels;
+  }
+
+  error(message: any) {
+    if (this.shouldLog(LogLevel.ERROR)) {
+      super.error(message);
+      this.writeToFile(
+        this.logFilePath,
+        `[ERROR] ${typeof message === 'string' ? message : JSON.stringify(message)}`,
+      );
+    }
+  }
+
+  warn(message: any) {
+    if (this.shouldLog(LogLevel.WARN)) {
+      super.warn(message);
+      this.writeToFile(
+        this.logFilePath,
+        `[WARN] ${typeof message === 'string' ? message : JSON.stringify(message)}`,
+      );
+    }
+  }
+
+  log(message: any) {
+    if (this.shouldLog(LogLevel.LOG)) {
+      super.log(message);
+      this.writeToFile(
+        this.logFilePath,
+        `[LOG] ${typeof message === 'string' ? message : JSON.stringify(message)}`,
+      );
+    }
+  }
+
+  debug(message: any) {
+    if (this.shouldLog(LogLevel.DEBUG)) {
+      super.debug(message);
+      this.writeToFile(
+        this.logFilePath,
+        `[DEBUG] ${typeof message === 'string' ? message : JSON.stringify(message)}`,
+      );
+    }
+  }
+
+  verbose(message: any) {
+    if (this.shouldLog(LogLevel.VERBOSE)) {
+      super.verbose(message);
+      this.writeToFile(
+        this.logFilePath,
+        `[VERBOSE] ${typeof message === 'string' ? message : JSON.stringify(message)}`,
+      );
+    }
+  }
+
+  private setupGlobalErrorHandlers() {
+    process.on('uncaughtException', (error: Error) => {
+      this.error(`Uncaught Exception: ${error.message}`);
+    });
+
+    process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
+      this.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
+    });
   }
 
   private ensureLogDirExists() {
@@ -61,7 +152,6 @@ export class LoggingService extends ConsoleLogger {
     const logMessage = `[REQUEST] ${JSON.stringify(requestData)}`;
 
     this.log(logMessage);
-    this.writeToFile(this.logFilePath, logMessage);
   }
 
   private extractReqData(request: IRequest) {
@@ -105,6 +195,5 @@ export class LoggingService extends ConsoleLogger {
     const logMessage = `[RESPONSE] ${JSON.stringify(response)}`;
 
     this.log(logMessage);
-    this.writeToFile(this.logFilePath, logMessage);
   }
 }

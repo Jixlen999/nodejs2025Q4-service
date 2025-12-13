@@ -3,7 +3,6 @@ import { IRequest, IResponse, LoggingService } from './logging.service';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-  private count = 0;
   constructor(private loggingService: LoggingService) {}
 
   use(req: any, res: any, next: () => void) {

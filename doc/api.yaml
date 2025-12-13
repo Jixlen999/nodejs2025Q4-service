@@ -17,6 +17,14 @@ paths:
         '200':
           description: ''
       tags: *ref_0
+  /test-logging:
+    get:
+      operationId: AppController_testLogger
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
   /user:
     post:
       operationId: UserController_create
