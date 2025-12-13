@@ -6,15 +6,20 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
 import * as yaml from 'js-yaml';
 import { LoggingService } from './logging/logging.service';
+import { AllExceptionsFilter } from './filters/all-execptions.filter';
 
 const PORT = process.env.PORT ?? 4000;
 
 async function bootstrap() {
-  const logger = new LoggingService();
-
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+
+  const loggingService = app.get(LoggingService);
+
+  app.useLogger(loggingService);
+
+  app.useGlobalFilters(new AllExceptionsFilter(loggingService));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,8 +28,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-
-  app.useLogger(logger);
 
   const config = new DocumentBuilder()
     .setTitle('Home Library Service')

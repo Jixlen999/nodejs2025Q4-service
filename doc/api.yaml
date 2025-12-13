@@ -7,8 +7,16 @@ paths:
       responses:
         '200':
           description: ''
-      tags:
+      tags: &ref_0
         - App
+  /unexpected-500-error:
+    get:
+      operationId: AppController_testUnknownError
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
   /user:
     post:
       operationId: UserController_create
@@ -25,7 +33,7 @@ paths:
         '400':
           description: Request body does not contain required field
       summary: Create new user
-      tags: &ref_0
+      tags: &ref_1
         - User
     get:
       operationId: UserController_findAll
@@ -34,7 +42,7 @@ paths:
         '200':
           description: Returns all users records
       summary: Get all users
-      tags: *ref_0
+      tags: *ref_1
   /user/{id}:
     get:
       operationId: UserController_findOne
@@ -52,7 +60,7 @@ paths:
         '404':
           description: User not found
       summary: Get single user by Id
-      tags: *ref_0
+      tags: *ref_1
     put:
       operationId: UserController_update
       parameters:
@@ -77,7 +85,7 @@ paths:
         '404':
           description: User not found
       summary: Update user's password
-      tags: *ref_0
+      tags: *ref_1
     delete:
       operationId: UserController_remove
       parameters:
@@ -94,7 +102,7 @@ paths:
         '404':
           description: User not found
       summary: Delete user
-      tags: *ref_0
+      tags: *ref_1
   /track:
     post:
       operationId: TrackController_create
@@ -111,7 +119,7 @@ paths:
         '400':
           description: Request body does not contain required field
       summary: Create new track
-      tags: &ref_1
+      tags: &ref_2
         - Track
     get:
       operationId: TrackController_findAll
@@ -120,7 +128,7 @@ paths:
         '200':
           description: Returns all tracks records
       summary: Get all tracks
-      tags: *ref_1
+      tags: *ref_2
   /track/{id}:
     get:
       operationId: TrackController_findOne
@@ -138,7 +146,7 @@ paths:
         '404':
           description: Track not found
       summary: Get single track by Id
-      tags: *ref_1
+      tags: *ref_2
     put:
       operationId: TrackController_update
       parameters:
@@ -161,7 +169,7 @@ paths:
         '404':
           description: Track not found
       summary: Update track info
-      tags: *ref_1
+      tags: *ref_2
     delete:
       operationId: TrackController_remove
       parameters:
@@ -178,7 +186,7 @@ paths:
         '404':
           description: Track not found
       summary: Delete track
-      tags: *ref_1
+      tags: *ref_2
   /artist:
     post:
       operationId: ArtistController_create
@@ -195,7 +203,7 @@ paths:
         '400':
           description: Request body does not contain required field
       summary: Create new artist
-      tags: &ref_2
+      tags: &ref_3
         - Artist
     get:
       operationId: ArtistController_findAll
@@ -204,7 +212,7 @@ paths:
         '200':
           description: Returns all artists records
       summary: Get all artists
-      tags: *ref_2
+      tags: *ref_3
   /artist/{id}:
     get:
       operationId: ArtistController_findOne
@@ -222,7 +230,7 @@ paths:
         '404':
           description: Artist not found
       summary: Get single artist by Id
-      tags: *ref_2
+      tags: *ref_3
     put:
       operationId: ArtistController_update
       parameters:
@@ -245,7 +253,7 @@ paths:
         '404':
           description: Artist not found
       summary: Update artist info
-      tags: *ref_2
+      tags: *ref_3
     delete:
       operationId: ArtistController_remove
       parameters:
@@ -262,7 +270,7 @@ paths:
         '404':
           description: Artist not found
       summary: Delete artist
-      tags: *ref_2
+      tags: *ref_3
   /album:
     post:
       operationId: AlbumController_create
@@ -279,7 +287,7 @@ paths:
         '400':
           description: Request body does not contain required field
       summary: Create new album
-      tags: &ref_3
+      tags: &ref_4
         - Album
     get:
       operationId: AlbumController_findAll
@@ -288,7 +296,7 @@ paths:
         '200':
           description: Returns all albums records
       summary: Get all albums
-      tags: *ref_3
+      tags: *ref_4
   /album/{id}:
     get:
       operationId: AlbumController_findOne
@@ -306,7 +314,7 @@ paths:
         '404':
           description: Album not found
       summary: Get single album by Id
-      tags: *ref_3
+      tags: *ref_4
     put:
       operationId: AlbumController_update
       parameters:
@@ -329,7 +337,7 @@ paths:
         '404':
           description: Album not found
       summary: Update album info
-      tags: *ref_3
+      tags: *ref_4
     delete:
       operationId: AlbumController_remove
       parameters:
@@ -346,7 +354,7 @@ paths:
         '404':
           description: Album not found
       summary: Delete album
-      tags: *ref_3
+      tags: *ref_4
   /favs:
     get:
       operationId: FavsController_findAll
@@ -355,7 +363,7 @@ paths:
         '200':
           description: Returns all favorite records (not their ids), split by entity type
       summary: Get all favorites
-      tags: &ref_4
+      tags: &ref_5
         - Favs
   /favs/track/{id}:
     post:
@@ -374,7 +382,7 @@ paths:
         '422':
           description: Track with id === trackId does not exist
       summary: Add track to the favorites
-      tags: *ref_4
+      tags: *ref_5
     delete:
       operationId: FavsController_removeTrack
       parameters:
@@ -391,7 +399,7 @@ paths:
         '404':
           description: Track is not favorite
       summary: Delete track from favorites
-      tags: *ref_4
+      tags: *ref_5
   /favs/artist/{id}:
     post:
       operationId: FavsController_addArtist
@@ -409,7 +417,7 @@ paths:
         '422':
           description: Artist with id === albumId does not exist
       summary: Add artist to the favorites
-      tags: *ref_4
+      tags: *ref_5
     delete:
       operationId: FavsController_removeArtist
       parameters:
@@ -426,7 +434,7 @@ paths:
         '404':
           description: Artist is not favorite
       summary: Delete artist from favorites
-      tags: *ref_4
+      tags: *ref_5
   /favs/album/{id}:
     post:
       operationId: FavsController_addAlbum
@@ -444,7 +452,7 @@ paths:
         '422':
           description: Album with id === albumId does not exist
       summary: Add album to the favorites
-      tags: *ref_4
+      tags: *ref_5
     delete:
       operationId: FavsController_removeAlbum
       parameters:
@@ -461,7 +469,7 @@ paths:
         '404':
           description: Album is not favorite
       summary: Delete album from favorites
-      tags: *ref_4
+      tags: *ref_5
 info:
   title: Home Library Service
   description: Home music library service API
