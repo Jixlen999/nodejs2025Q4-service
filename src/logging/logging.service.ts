@@ -41,7 +41,7 @@ export class LoggingService extends ConsoleLogger {
 
     this.setupGlobalErrorHandlers();
 
-    this.ensureLogDirExists();
+    this.ensureLogDirAndFileExists();
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -127,17 +127,22 @@ export class LoggingService extends ConsoleLogger {
     });
   }
 
-  private ensureLogDirExists() {
-    if (!fs.existsSync(this.logDir)) {
-      try {
+  private ensureLogDirAndFileExists() {
+    try {
+      if (!fs.existsSync(this.logDir)) {
         fs.mkdirSync(this.logDir, { recursive: true });
-        this.log(`Log directory was created: ${this.logDir}`);
-      } catch (error) {
-        console.error(`Could not create log directory: ${error.message}`);
+        console.log(`Created: ${this.logDir}`);
       }
+
+      if (!fs.existsSync(this.logFilePath)) {
+        fs.writeFileSync(this.logFilePath, '', { encoding: 'utf8' });
+        console.log(`Created: ${this.logFilePath}`);
+      }
+    } catch (error) {
+      console.error(`Failed to create log file: ${error.message}`);
+      throw error;
     }
   }
-
   writeToFile(filePath: string, message: string) {
     try {
       if (this.shouldRotate(filePath)) {
@@ -191,9 +196,9 @@ export class LoggingService extends ConsoleLogger {
 
       fs.writeFileSync(filePath, '', { encoding: 'utf8' });
 
-      this.log(`Log file rotated`);
+      console.log(`Log file rotated`);
     } catch (error) {
-      this.error(`Failed to rotate file: ${error.message}`);
+      console.error(`Failed to rotate file: ${error.message}`);
     }
   }
 
