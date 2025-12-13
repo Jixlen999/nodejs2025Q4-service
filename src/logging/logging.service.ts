@@ -22,9 +22,13 @@ export class LoggingService extends ConsoleLogger {
   private logDir: string;
   private logFilePath: string;
   private currentLogLevel: LogLevel;
+  private maxFileSizeBytes: number;
 
   constructor(context?: string) {
     super(context || 'Home Library');
+
+    const maxSizeKB = parseInt(process.env.LOG_MAX_FILE_SIZE_KB || '1024');
+    this.maxFileSizeBytes = maxSizeKB * 1024;
 
     this.currentLogLevel =
       (process.env.LOG_LEVEL as LogLevel) || LogLevel.ERROR;
@@ -136,6 +140,10 @@ export class LoggingService extends ConsoleLogger {
 
   writeToFile(filePath: string, message: string) {
     try {
+      if (this.shouldRotate(filePath)) {
+        this.rotateLogFile(filePath);
+      }
+
       const timestamp = new Date().toISOString();
       const formattedMessage = `[${timestamp}] ${message}\n`;
 
@@ -144,6 +152,48 @@ export class LoggingService extends ConsoleLogger {
       console.error(
         `Could not write log to file ${filePath}: ${error.message}`,
       );
+    }
+  }
+
+  private shouldRotate(filePath: string): boolean {
+    try {
+      const stats = fs.statSync(filePath);
+      return stats.size >= this.maxFileSizeBytes;
+    } catch {
+      return false;
+    }
+  }
+
+  private rotateLogFile(filePath: string) {
+    const dir = path.dirname(filePath);
+    const baseName = path.basename(filePath, '.log');
+    const maxBackupFiles = 10;
+
+    try {
+      const oldestFile = path.join(dir, `${baseName}.${maxBackupFiles}.log`);
+      if (fs.existsSync(oldestFile)) {
+        fs.unlinkSync(oldestFile);
+      }
+
+      for (let i = maxBackupFiles - 1; i >= 1; i--) {
+        const currentFile = path.join(dir, `${baseName}.${i}.log`);
+        const nextFile = path.join(dir, `${baseName}.${i + 1}.log`);
+
+        if (fs.existsSync(currentFile)) {
+          fs.renameSync(currentFile, nextFile);
+        }
+      }
+
+      const firstBackup = path.join(dir, `${baseName}.1.log`);
+      if (fs.existsSync(filePath)) {
+        fs.renameSync(filePath, firstBackup);
+      }
+
+      fs.writeFileSync(filePath, '', { encoding: 'utf8' });
+
+      this.log(`Log file rotated`);
+    } catch (error) {
+      this.error(`Failed to rotate file: ${error.message}`);
     }
   }
 

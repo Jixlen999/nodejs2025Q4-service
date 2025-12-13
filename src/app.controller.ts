@@ -40,4 +40,11 @@ export class AppController {
     this.loggingService.debug('Log debug');
     this.loggingService.verbose('Log verbose');
   }
+
+  @Get('test-rotation')
+  testLogRotation() {
+    for (let i = 0; i < 1000; i++) {
+      this.loggingService.log(`Test message ${i} for rotation testing`);
+    }
+  }
 }

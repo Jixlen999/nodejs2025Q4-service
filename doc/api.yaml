@@ -25,6 +25,14 @@ paths:
         '200':
           description: ''
       tags: *ref_0
+  /test-rotation:
+    get:
+      operationId: AppController_testLogRotation
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
   /user:
     post:
       operationId: UserController_create
