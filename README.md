@@ -40,9 +40,9 @@ npm run docker:up
 
 After container "home-library-rest-service" started you can user routes
 
-- [localhost:4000/unexpected-500-error](localhost:4000/unexpected-500-error)
-- [localhost:4000/test-logging](localhost:4000/test-logging)
-- [localhost:4000/test-rotation](localhost:4000/test-rotation)
+- [http://localhost:4000/unexpected-500-error](http://localhost:4000/unexpected-500-error)
+- [http://localhost:4000/test-logging](http://localhost:4000/test-logging)
+- [http://localhost:4000/test-rotation](http:/localhost:4000/test-rotation)
 - Or use "npm run test:auth:only" to check request/respose logs
 
 NOTE The freshest logs will be located in logs/app.log (numbers show oldest)
