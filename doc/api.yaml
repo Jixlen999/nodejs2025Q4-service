@@ -486,6 +486,66 @@ paths:
           description: Album is not favorite
       summary: Delete album from favorites
       tags: *ref_5
+  /auth/signup:
+    post:
+      operationId: AuthController_signup
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: Record created
+        '400':
+          description: Dto is invalid (no login or password, or they are not a strings
+      summary: Register new user
+      tags: &ref_6
+        - Auth
+  /auth/login:
+    post:
+      operationId: AuthController_login
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserDto'
+      responses:
+        '200':
+          description: Return tokens
+        '400':
+          description: Dto is invalid (no login or password, or they are not a strings
+        '403':
+          description: >-
+            Authentication failed (no user with such login, password does not
+            match actual one, etc.)
+      summary: Get access and refresh token
+      tags: *ref_6
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenDto'
+      responses:
+        '200':
+          description: Tokens refreshed successfully
+        '401':
+          description: No refresh token provided
+        '403':
+          description: Invalid or expired refresh token
+      summary: >-
+        Send refresh token in body as { refreshToken } to get new pair of Access
+        token and Refresh token
+      tags: *ref_6
 info:
   title: Home Library Service
   description: Home music library service API
@@ -633,3 +693,24 @@ components:
           example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
           description: Artist uuid
           nullable: true
+    LoginUserDto:
+      type: object
+      properties:
+        login:
+          type: string
+          example: Login
+          description: User login
+        password:
+          type: string
+          example: Password123
+          description: User password
+      required:
+        - login
+        - password
+    RefreshTokenDto:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: refresh_token_string
+          description: Refresh token

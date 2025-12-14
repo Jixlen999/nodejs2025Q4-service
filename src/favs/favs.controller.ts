@@ -8,11 +8,14 @@ import {
   UsePipes,
   ValidationPipe,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { JwtGuard } from '../auth/guards/jwt.guard';
 
 @Controller('favs')
+@UseGuards(JwtGuard)
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
