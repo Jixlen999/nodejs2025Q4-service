@@ -15,7 +15,7 @@ git clone {repository URL}
 ## Changing branch
 
 ```
-git checkout dev-part-2
+git checkout dev-part-3
 ```
 
 ## Installing NPM modules
@@ -36,13 +36,42 @@ npx prisma generate
 npm run docker:up
 ```
 
-## Testing
+## How to check logs implementation
 
-After container "home-library-rest-service" running:
+After container "home-library-rest-service" started you can user routes
+
+- [localhost:4000/unexpected-500-error](localhost:4000/unexpected-500-error)
+- [localhost:4000/test-logging](localhost:4000/test-logging)
+- [localhost:4000/test-rotation](localhost:4000/test-rotation)
+- Or use "npm run test:auth:only" to check request/respose logs
+
+NOTE The freshest logs will be located in logs/app.log (numbers show oldest)
+
+## ! Commands usefull for this task (Logging & Error Handling and Authentication and Authorization)
+
+## Testing auth and refresh token
+
+After container "home-library-rest-service" running
+
+> This will run all the tests except refresh-token tests. Those which are not located in test/auth will fail (they will return "401 Unauthorized" because they are not using authorization and it is expected behaviour)
 
 ```
-npm run test
+npm run test:auth
 ```
+
+> This will run only tests associated with Authentication and Authorization (located in test/auth)
+
+```
+npm run test:auth:only
+```
+
+> This will run refresh-token tests
+
+```
+npm run test:refresh
+```
+
+# Others (from previous tasks)
 
 ## Vulnerabilities scanning
 
