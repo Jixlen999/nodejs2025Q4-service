@@ -4,11 +4,18 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker desktop - [Download & Install Docker desktop](https://www.docker.com/products/docker-desktop/)
 
 ## Downloading
 
 ```
 git clone {repository URL}
+```
+
+## Changing branch
+
+```
+git checkout dev-part-3
 ```
 
 ## Installing NPM modules
@@ -17,42 +24,65 @@ git clone {repository URL}
 npm install
 ```
 
-## Running application
+## Generating Prisma (important!)
 
 ```
-npm start
+npx prisma generate
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
-
-## Testing
-
-After application running open new terminal and enter:
-
-To run all tests without authorization
+## Running application (with Docker + docker desktop running)
 
 ```
-npm run test
+npm run docker:up
 ```
 
-To run only one of all test suites
+## How to check logs implementation
 
-```
-npm run test -- <path to suite>
-```
+After container "home-library-rest-service" started you can user routes
 
-To run all test with authorization
+- [http://localhost:4000/unexpected-500-error](http://localhost:4000/unexpected-500-error)
+- [http://localhost:4000/test-logging](http://localhost:4000/test-logging)
+- [http://localhost:4000/test-rotation](http:/localhost:4000/test-rotation)
+- Or use "npm run test:auth:only" to check request/respose logs
+
+NOTE The freshest logs will be located in logs/app.log (numbers show oldest)
+
+## ! Commands usefull for this task (Logging & Error Handling and Authentication and Authorization)
+
+## Testing auth and refresh token
+
+After container "home-library-rest-service" running
+
+> This will run all the tests except refresh-token tests. Those which are not located in test/auth will fail (they will return "401 Unauthorized" because they are not using authorization and it is expected behaviour)
 
 ```
 npm run test:auth
 ```
 
-To run only specific test suite with authorization
+> This will run only tests associated with Authentication and Authorization (located in test/auth)
 
 ```
-npm run test:auth -- <path to suite>
+npm run test:auth:only
+```
+
+> This will run refresh-token tests
+
+```
+npm run test:refresh
+```
+
+# Others (from previous tasks)
+
+## Vulnerabilities scanning
+
+```
+npm run security:docker:check
+```
+
+## Restart docker
+
+```
+npm run docker:restart
 ```
 
 ### Auto-fix and format
@@ -65,8 +95,16 @@ npm run lint
 npm run format
 ```
 
-### Debugging in VSCode
+## How to check restart after crash
 
-Press <kbd>F5</kbd> to debug.
+After container "home-library-rest-service" running go to /crash route, app will stop in 3 sec and container will restart.
 
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+## How to check restart upon changes implemented into src folder
+
+Make some changes inside any file in src folder (for example src/app.controller.ts: console.log('APP WILL CRASH IN 3 SECONDS') -> console.log('APP WILL CRASH IN 3 SECONDS!!!') ) and save file (ctrl + s). Container will restart.
+
+## DockerHub Image
+
+`jixlen/nodejs2025q4-service-app:latest`
+
+Built image for this project is pushed to DockerHub - https://hub.docker.com/repository/docker/jixlen/nodejs2025q4-service-app/tags
